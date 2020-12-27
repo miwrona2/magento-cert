@@ -11,6 +11,7 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 class AssignProductToCategory implements DataPatchInterface, PatchRevertableInterface
 {
     private const PRODUCTS_SKU = 'michals-bag';
+
     /** @var CategoryLinkManagementInterface */
     private $linkManagement;
 
@@ -30,7 +31,6 @@ class AssignProductToCategory implements DataPatchInterface, PatchRevertableInte
         $this->categoryLinkRepository = $categoryLinkRepository;
     }
 
-
     /** @inheritdoc */
     public static function getDependencies(): array
     {
@@ -44,16 +44,17 @@ class AssignProductToCategory implements DataPatchInterface, PatchRevertableInte
     }
 
     /** @inheritdoc */
-    public function apply()
+    public function apply(): void
     {
         $this->linkManagement->assignProductToCategories(self::PRODUCTS_SKU, [3, 4]);
     }
 
     /** @inheritdoc */
-    public function revert()
+    public function revert(): void
     {
-        $this->categoryLinkRepository->deleteByIds(3, self::PRODUCTS_SKU);
-        $this->categoryLinkRepository->deleteByIds(4, self::PRODUCTS_SKU);
+        $categoryIds = [3, 4];
+        foreach ($categoryIds as $categoryId) {
+            $this->categoryLinkRepository->deleteByIds($categoryId, self::PRODUCTS_SKU);
+        }
     }
-
 }
