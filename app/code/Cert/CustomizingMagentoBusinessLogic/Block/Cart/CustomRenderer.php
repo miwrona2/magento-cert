@@ -7,5 +7,11 @@ use Magento\Checkout\Block\Cart\Item\Renderer;
 
 class CustomRenderer extends Renderer
 {
+    protected function _toHtml()
+    {
+        $parentHtml = parent::_toHtml();
+        $html = $parentHtml . "<p>Custom content</p>";
+        return $html;
+    }
 
 }
