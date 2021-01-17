@@ -12,6 +12,7 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 class AddAddressField implements DataPatchInterface, PatchRevertableInterface
 {
     private const ATTR_CODE = 'intercom_code';
+
     /** @var CustomerSetupFactory */
     private $customerSetupFactory;
 
