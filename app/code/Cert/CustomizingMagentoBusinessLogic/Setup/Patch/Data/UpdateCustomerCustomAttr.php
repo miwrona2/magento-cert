@@ -5,13 +5,11 @@ namespace Cert\CustomizingMagentoBusinessLogic\Setup\Patch\Data;
 
 use Magento\Customer\Api\CustomerMetadataInterface;
 use Magento\Customer\Model\ResourceModel\Attribute;
-use Magento\Customer\Setup\CustomerSetup;
 use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
-class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterface
+class UpdateCustomerCustomAttr implements DataPatchInterface
 {
     /** @var CustomerSetupFactory */
     private $customerSetupFactory;
@@ -40,37 +38,18 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
 
     public function apply(): void
     {
+        /**
+         * TODO make const in
+         * app/code/Cert/CustomizingMagentoBusinessLogic/Setup/Patch/Data/AddCustomerCustomAttr.php
+         * and create dependency here
+         */
         $attributeCode = 'custom_customer_attribute';
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
         $entityTypeId = CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER;
-        $customerSetup->addAttribute($entityTypeId, $attributeCode, [
-            'label' => 'Custom Attribute',
-            'required' => 1,
-            'user_defined' => 1,
-            'note' => 'Type whatever you want',
-            'system' => 0,
-            'position' => 60
-        ]);
         $attribute = $customerSetup->getEavConfig()->getAttribute($entityTypeId, $attributeCode);
-        $attribute->setData('used_in_forms', [
-            'adminhtml_customer',
-            'customer_account_create',
-            'customer_account_edit'
-        ]);
-
-        $attribute->setData('validate_rules', [
-            'input_validation' => 1,
-            'min_text_length' => 3,
-            'max_text_length' => 30,
-
-        ]);
+        $customerSetup->updateAttribute($entityTypeId, $attribute->getAttributeId(), 'backend_type', 'text', 1);
+//        $customerSetup->updateAttribute($entityTypeId, $attribute->getAttributeId(), 'sort_order', 1000);
         $this->customerAttrResModel->save($attribute);
-    }
-
-    public function revert(): void
-    {
-        $customerSetup = $this->customerSetupFactory->create([$this->setup]);
-        $customerSetup->removeAttribute('customer', 'custom_customer_attribute');
     }
 
     public function getAliases(): array
@@ -80,6 +59,8 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
 
     public static function getDependencies(): array
     {
-        return [];
+        return [
+            AddCustomerCustomAttr::class
+        ];
     }
 }
