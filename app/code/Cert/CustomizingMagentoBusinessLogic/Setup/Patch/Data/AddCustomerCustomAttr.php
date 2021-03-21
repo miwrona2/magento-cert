@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Cert\CustomizingMagentoBusinessLogic\Setup\Patch\Data;
 
-use Magento\Customer\Api\CustomerMetadataInterface;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\ResourceModel\Attribute;
-use Magento\Customer\Setup\CustomerSetup;
 use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
@@ -13,6 +12,7 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
 class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterface
 {
+    public const CUSTOM_CUSTOMER_ATTRIBUTE = 'custom_customer_attribute';
     /** @var CustomerSetupFactory */
     private $customerSetupFactory;
 
@@ -40,9 +40,9 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
 
     public function apply(): void
     {
-        $attributeCode = 'custom_customer_attribute';
+        $attributeCode = self::CUSTOM_CUSTOMER_ATTRIBUTE;
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
-        $entityTypeId = CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER;
+        $entityTypeId = Customer::ENTITY;
         $customerSetup->addAttribute($entityTypeId, $attributeCode, [
             'label' => 'Custom Attribute',
             'required' => 1,
@@ -70,7 +70,7 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
     public function revert(): void
     {
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
-        $customerSetup->removeAttribute('customer', 'custom_customer_attribute');
+        $customerSetup->removeAttribute('customer', self::CUSTOM_CUSTOMER_ATTRIBUTE);
     }
 
     public function getAliases(): array
