@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Cert\CustomizingMagentoBusinessLogic\Setup\Patch\Data;
 
-use Magento\Customer\Api\CustomerMetadataInterface;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\ResourceModel\Attribute;
 use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -38,17 +38,12 @@ class UpdateCustomerCustomAttr implements DataPatchInterface
 
     public function apply(): void
     {
-        /**
-         * TODO make const in
-         * app/code/Cert/CustomizingMagentoBusinessLogic/Setup/Patch/Data/AddCustomerCustomAttr.php
-         * and create dependency here
-         */
-        $attributeCode = 'custom_customer_attribute';
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
-        $entityTypeId = CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER;
-        $attribute = $customerSetup->getEavConfig()->getAttribute($entityTypeId, $attributeCode);
-        $customerSetup->updateAttribute($entityTypeId, $attribute->getAttributeId(), 'backend_type', 'text', 1);
-//        $customerSetup->updateAttribute($entityTypeId, $attribute->getAttributeId(), 'sort_order', 1000);
+        $attribute = $customerSetup->getEavConfig()->getAttribute(
+            Customer::ENTITY,
+            AddCustomerCustomAttr::CUSTOM_CUSTOMER_ATTRIBUTE
+        );
+        $attribute->setIsRequired(1);
         $this->customerAttrResModel->save($attribute);
     }
 

@@ -12,7 +12,7 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
 class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterface
 {
-    public const CUSTOM_CUSTOMER_ATTRIBUTE = 'custom_customer_attribute';
+    public const CUSTOM_CUSTOMER_ATTRIBUTE = 'hobby';
     /** @var CustomerSetupFactory */
     private $customerSetupFactory;
 
@@ -44,8 +44,8 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
         $entityTypeId = Customer::ENTITY;
         $customerSetup->addAttribute($entityTypeId, $attributeCode, [
-            'label' => 'Custom Attribute',
-            'required' => 1,
+            'label' => 'Hobby',
+            'required' => 0,
             'user_defined' => 1,
             'note' => 'Type whatever you want',
             'system' => 0,
