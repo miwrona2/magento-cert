@@ -70,7 +70,7 @@ class AddCustomerCustomAttr implements DataPatchInterface, PatchRevertableInterf
     public function revert(): void
     {
         $customerSetup = $this->customerSetupFactory->create([$this->setup]);
-        $customerSetup->removeAttribute('customer', self::CUSTOM_CUSTOMER_ATTRIBUTE);
+        $customerSetup->removeAttribute(Customer::ENTITY, self::CUSTOM_CUSTOMER_ATTRIBUTE);
     }
 
     public function getAliases(): array
