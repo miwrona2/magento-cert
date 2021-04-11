@@ -2,8 +2,8 @@
 <body>
     <referenceContainer name="content">
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Customer\Block\Account\SortLinkInterface" name="product-promotions"
-                   after="customer-account-navigation-address-link">
+            <block class="Magento\Customer\Block\Account\SortLinkInterface" name="main-page"
+                   after="customer-account-navigation-account-link">
                 <arguments>
                     <argument name="label" xsi:type="string" translate="true">Main Page</argument>
                     <argument name="path" xsi:type="string">/</argument>
