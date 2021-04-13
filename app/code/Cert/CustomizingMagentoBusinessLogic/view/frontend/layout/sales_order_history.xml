@@ -1,0 +1,8 @@
+<body>
+    <referenceContainer name="content">
+        <referenceBlock name="sales.order.history.info">
+            <block template="Cert_CustomizingMagentoBusinessLogic::custom.phtml"/>
+        </referenceBlock>
+    </referenceContainer>
+</body>
+
